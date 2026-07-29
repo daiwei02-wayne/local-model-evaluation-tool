@@ -1,0 +1,1863 @@
+# 题目146 LRU 缓存
+
+来源文档：LeetCode_HOT100_题目汇总_含Java接口Demo_测试用例统一版.docx
+
+请你设计并实现一个满足  约束的数据结构。
+实现 `LRUCache` 类：
+`LRUCache(int capacity)` 以 正整数 作为容量 `capacity` 初始化 LRU 缓存
+`int get(int key)` 如果关键字 `key` 存在于缓存中，则返回关键字的值，否则返回 `-1` 。
+`void put(int key, int value)` 如果关键字 `key` 已经存在，则变更其数据值 `value` ；如果不存在，则向缓存中插入该组 `key-value` 。如果插入操作导致关键字数量超过 `capacity` ，则应该 逐出 最久未使用的关键字。
+函数 `get` 和 `put` 必须以 `O(1)` 的平均时间复杂度运行。
+示例：
+输入["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"][[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]输出[null, null, null, 1, null, -1, null, -1, 3, 4]解释LRUCache lRUCache = new LRUCache(2);lRUCache.put(1, 1); // 缓存是 {1=1}lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}lRUCache.get(1);    // 返回 1lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}lRUCache.get(2);    // 返回 -1 (未找到)lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}lRUCache.get(1);    // 返回 -1 (未找到)lRUCache.get(3);    // 返回 3lRUCache.get(4);    // 返回 4
+提示：
+`1 <= capacity <= 3000`
+`0 <= key <= 10000`
+0 <= value <= 10<sup>5</sup>
+最多调用 2 * 10<sup>5</sup> 次 `get` 和 `put`
+
+```json
+{
+  "id": 146,
+  "title": "LRU 缓存",
+  "difficulty": "中等",
+  "method": "question_146",
+  "cases": [
+    {
+      "name": "case_01_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_02_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_03_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_04_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_05_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_06_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_07_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_08_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_09_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_10_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_11_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_12_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_13_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_14_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_15_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_16_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_17_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_18_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_19_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_20_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_21_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_22_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_23_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_24_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_25_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_26_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_27_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_28_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_29_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_30_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_31_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_32_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_33_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_34_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_35_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_36_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_37_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "case_38_edge_capacity_one",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        1
+      ]
+    },
+    {
+      "name": "case_39_edge_eviction",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "get"
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        -1,
+        2
+      ]
+    },
+    {
+      "name": "case_40_base",
+      "input": {
+        "args": [
+          [
+            "LRUCache",
+            "put",
+            "put",
+            "get",
+            "put",
+            "get",
+            "put",
+            "get",
+            "get",
+            "get"
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ]
+      },
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    }
+  ]
+}
+```

@@ -1,0 +1,76 @@
+# 代码能力测评工具使用说明
+
+## 目录说明
+
+```text
+代码能力测评工具/
+  codingtest.py              # 启动入口
+  codex-test/
+    cases/                   # 热题 100 测试用例，每题 40 条
+    top100_tester/           # 测试框架核心代码
+  ongoing/                   # 批量测试时放待测模型代码
+  result/                    # 测试完成后自动输出结果 txt
+```
+
+## 待测代码要求
+
+提交文件必须是 Python 脚本，类名可以任意，但函数名必须符合：
+
+```text
+question_题号
+```
+
+例如：
+
+```python
+class AnyModelName:
+    def question_1(self, nums, target):
+        ...
+```
+
+也兼容模型生成的无 `self` 写法：
+
+```python
+class AnyModelName:
+    def question_1(nums, target):
+        ...
+```
+
+## 单文件测试
+
+在项目目录下执行：
+
+```bash
+python3 -B codingtest.py ./ongoing/xxx_codingtest.py
+```
+
+也可以传入绝对路径：
+
+```bash
+python3 -B codingtest.py /path/to/xxx_codingtest.py
+```
+
+## 批量测试
+
+把所有待测 `.py` 文件放入 `ongoing/` 目录，然后执行：
+
+```bash
+python3 -B codingtest.py
+```
+
+无参数时会自动按文件名字母顺序执行 `ongoing/` 下的所有 `.py` 文件。
+
+## 结果输出
+
+测试过程会打印到终端，同时在 `result/` 目录生成结果文件：
+
+```text
+result/模型文件名.txt
+```
+
+每个结果文件包含每题通过情况、总正确数、总错误数、提交率、通过率和运行耗时。
+
+## 框架设计简述
+
+框架入口读取提交代码和 100 题用例后，先扫描提交文件中任意类里的 `question_题号` 方法。每个测试用例都通过独立子进程执行，并设置超时和内存限制，避免死循环、异常或内存问题影响主程序。输入输出通过适配层转换，支持数组、字符串、链表、二叉树、随机链表、环形链表、相交链表和设计类题目。所有与预期输出不一致、运行异常、超时的用例都会计为错误。
+

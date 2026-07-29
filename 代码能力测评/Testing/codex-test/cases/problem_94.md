@@ -1,0 +1,727 @@
+# 题目94 二叉树的中序遍历
+
+来源文档：LeetCode_HOT100_题目汇总_含Java接口Demo_测试用例统一版.docx
+
+给定一个二叉树的根节点 `root` ，返回 _它的 中序 遍历_ 。
+示例 1：
+题目配图：
+输入：root = [1,null,2,3]输出：[1,3,2]
+示例 2：
+输入：root = []输出：[]
+示例 3：
+输入：root = [1]输出：[1]
+提示：
+树中节点数目在范围 `[0, 100]` 内
+`-100 <= Node.val <= 100`
+进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+
+```json
+{
+  "id": 94,
+  "title": "二叉树的中序遍历",
+  "difficulty": "简单",
+  "method": "question_94",
+  "cases": [
+    {
+      "name": "case_01_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_02_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_03_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_04_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_05_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_06_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_07_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_08_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_09_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_10_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_11_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_12_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_13_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_14_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_15_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_16_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_17_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_18_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_19_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_20_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_21_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_22_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_23_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_24_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_25_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_26_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_27_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_28_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_29_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_30_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_31_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_32_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_33_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_34_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_35_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_36_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "case_37_base",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              null,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "name": "case_38_edge_empty",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": []
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "name": "case_39_edge_single",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1
+            ]
+          }
+        ]
+      },
+      "expected": [
+        1
+      ]
+    },
+    {
+      "name": "case_40_edge_left_chain",
+      "input": {
+        "args": [
+          {
+            "__type__": "TreeNode",
+            "value": [
+              1,
+              2,
+              null,
+              3
+            ]
+          }
+        ]
+      },
+      "expected": [
+        3,
+        2,
+        1
+      ]
+    }
+  ]
+}
+```

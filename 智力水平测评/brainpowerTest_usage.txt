@@ -1,0 +1,117 @@
+brainpowerTest.py 使用说明
+==========================
+
+一、工具用途
+------------
+
+brainpowerTest.py 用于顺序调用本地或远端 OpenAI 兼容模型接口，执行固定的模型智力水平测试题。
+题目 prompt 固定写在脚本中，调用时不会额外拼接系统提示或补充说明。
+
+
+二、路径规则
+------------
+
+脚本使用相对目录。
+
+默认输出目录：
+brainpower_result
+
+该目录会创建在 brainpowerTest.py 所在目录下。
+例如脚本放在桌面时，输出目录为：
+桌面/brainpower_result
+
+
+三、输出文件
+------------
+
+brainpower_result/run_log.txt
+  完整运行日志，追加写入，不覆盖历史。
+
+brainpower_result/模型名_result.jsonl
+  每题结构化结果，包含 prompt、期望答案、模型答案、状态、耗时。
+
+brainpower_result/模型名_final_result.txt
+  本次运行的最终汇总结果。
+
+
+四、默认参数
+------------
+
+默认模型：
+gemma-4-E4B-it-MLX-4bit
+
+默认 API：
+http://127.0.0.1:5858/v1
+
+默认 API Key：
+daiwei5858
+
+默认输出目录：
+brainpower_result
+
+
+五、运行示例
+------------
+
+使用默认参数运行：
+
+python3 -B brainpowerTest.py
+
+
+指定本机模型服务：
+
+python3 -B brainpowerTest.py \
+  --model gemma-4-E4B-it-MLX-4bit \
+  --base-url http://127.0.0.1:8999/v1 \
+  --api-key daiwei02
+
+
+指定远端模型服务：
+
+python3 -B brainpowerTest.py \
+  --model Qwen3-Coder-Next-4bit \
+  --base-url http://10.10.10.1:5858/v1 \
+  --api-key daiwei5858
+
+
+指定输出目录：
+
+python3 -B brainpowerTest.py \
+  --model Qwen3-Coder-Next-4bit \
+  --base-url http://10.10.10.1:5858/v1 \
+  --api-key daiwei5858 \
+  --output-dir brainpower_result
+
+
+六、常用参数
+------------
+
+--model
+  模型名称。
+
+--base-url
+  OpenAI 兼容接口地址，例如 http://127.0.0.1:8999/v1。
+
+--api-key
+  API Key。
+
+--output-dir
+  输出目录。相对路径按 brainpowerTest.py 所在目录解析。
+
+--temperature
+  采样温度，默认 0.0。
+
+--max-tokens
+  最大输出 token，默认 1024。
+
+--timeout
+  单次请求超时时间，单位秒，默认 180。
+
+--retries
+  失败重试次数，默认 2。
+
+
+七、查看帮助
+------------
+
+python3 -B brainpowerTest.py --help

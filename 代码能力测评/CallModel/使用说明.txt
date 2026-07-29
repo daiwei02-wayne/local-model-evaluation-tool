@@ -1,0 +1,111 @@
+代码能力测评工具 CallModel 使用说明
+=================================
+
+一、目录结构
+------------
+
+CallModel/
+  launch.py        主入口：按模型顺序批量调用
+  run_all_v2.py    单模型执行器，由 launch.py 调用
+  使用说明.txt     本说明
+  代码题目/        100 道题目图片，运行必需
+  result/          输出目录，运行后生成答案和日志
+
+
+二、运行前准备
+--------------
+
+1. 确认模型服务支持 OpenAI 兼容接口。
+2. 默认配置在 launch.py 中：
+   API: http://127.0.0.1:5858/v1
+   API Key: daiwei5858
+3. 确认 代码题目/ 目录中存在 question_*.jpg。
+
+
+三、运行全部默认模型
+--------------------
+
+cd "/Users/wayne.dai/Desktop/代码能力测评工具/CallModel"
+python3 -B launch.py
+
+默认会按 launch.py 中的模型列表顺序执行，并输出到 result/。
+
+
+四、只运行指定模型
+------------------
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit
+
+多个模型用英文逗号分隔：
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit,gemma-4-31b-it-4bit
+
+
+五、只测试部分题目
+------------------
+
+只测试第 1 题：
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit --questions 1
+
+测试第 1 到第 5 题：
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit --questions 1-5
+
+测试指定题号：
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit --questions 1,2,24,48
+
+
+六、中断后继续
+--------------
+
+如果中途停止，继续运行时加 --resume。
+脚本会跳过答案文件中已经存在的 question_题号。
+
+python3 -B launch.py --models Qwen3-Coder-Next-4bit --resume
+
+
+七、输出文件
+------------
+
+result/模型名_codingtest.py
+  模型生成的答案代码。
+
+result/模型名_codingtest.jsonl
+  每题状态、耗时、解析结果日志。
+
+result/run_log.txt
+  完整终端日志，追加写入，不覆盖历史。
+
+launch_results.jsonl
+  模型级调度结果日志，追加写入。
+
+
+八、常用参数
+------------
+
+--models
+  指定模型名。不传时运行 launch.py 中默认模型列表。
+
+--questions
+  指定题号范围，例如 1、1-5、1,2,24。
+
+--resume
+  断点续跑，不覆盖已有 question_题号。
+
+--base-url
+  覆盖默认 API 地址。
+
+--api-key
+  覆盖默认 API Key。
+
+--dry-run
+  只打印将要执行的命令，不实际调用模型。
+
+
+九、查看即将执行的命令
+----------------------
+
+python3 -B launch.py --dry-run
+
